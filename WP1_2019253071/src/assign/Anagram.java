@@ -5,18 +5,32 @@ import java.util.Scanner;
 public class Anagram {
 	public static void main(String args[]) {
 		Scanner sc = new Scanner(System.in);
+		String array1[] = new String [100];
+		String array2[] = new String [100];
+		int i = 0,j=0,k=0;
 		while (true) {
 			String first = sc.next();
 			if (first.equals("quit")) {
+				System.out.println("anagram!");
+				for(k=0;k<i;k++) {
+					System.out.println(array1[k]);
+				}
+				System.out.println("not anagram!");
+				for(k=0;k<j;k++) {
+					System.out.println(array2[k]);
+				}
 				System.out.println("종료되었습니다.");
 				break;
 			}
 			String second = sc.next();
 			int result = numberNeeded(first, second);
 			if (result == 0) {
-				System.out.println("anagram!");
-			} else {
-				System.out.println("not anagram!");
+				array1[i] = first + " " + second;
+				i++;
+			} 
+			else {
+				array2[j] = first + " " + second;
+				j++;
 			}
 		}
 	}
@@ -25,26 +39,26 @@ public class Anagram {
 		int count = 0;
 
 		for (char alphabet = 'a'; alphabet <= 'z'; alphabet++) {
-			int dif = countNum(first, alphabet) - countNum(second, alphabet);
+			int i = countNum(first, alphabet) - countNum(second, alphabet);
 			int sum = countNum(first, alphabet) + countNum(second, alphabet);
 			System.out.print(alphabet + " = " + sum + ", ");
 
-			if (dif < 0) {
-				dif = dif * -1;
+			if (i < 0) {
+				i = i * -1;
 			}
-			count += dif;
+			count += i;
 		}
 		return count;
 	}
 
-	public static int countNum(String str, char ch) {
+	public static int countNum(String a, char b) {
 		int count = 0;
 
-		if (str.indexOf(ch) == -1) {
+		if (a.indexOf(b) == -1) {
 			return 0;
 		}
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == ch) {
+		for (int i = 0; i < a.length(); i++) {
+			if (a.charAt(i) == b) {
 				count++;
 			}
 		}

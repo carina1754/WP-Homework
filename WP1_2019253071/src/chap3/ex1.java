@@ -13,12 +13,12 @@ public class ex1 {
 
 		Scanner Sc = new Scanner(System.in);
 
-		System.out.println("이차방정식(ax^2+bx+c=0꼴)의 근을 구해주는 프로그램입니다.");
-		System.out.print("이차항 계수(a)를 입력하세요");
+		System.out.println("이차방정식의 근을 구해주는 프로그램입니다.");
+		System.out.print("이차항 계수를 입력하세요 : ");
 		a = Sc.nextInt();
-		System.out.print("이차항 계수(b)를 입력하세요");
+		System.out.print("일차항 계수를 입력하세요 : ");
 		b = Sc.nextInt();
-		System.out.print("상수항(c)를 입력하세요");
+		System.out.print("상수항를 입력하세요 : ");
 		c = Sc.nextInt();
 		determinant = (b * b) - (4 * a * c);
 		root = Math.sqrt(determinant);///// root를 계산하는 명령어

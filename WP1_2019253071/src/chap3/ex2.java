@@ -10,11 +10,11 @@ public class ex2 {
 
 		System.out.println("BMI를 구해주는 프로그램입니다.");
 
-		System.out.print("몸무게를 입력하세요");
+		System.out.print("몸무게를 입력하세요 : ");
 
 		w = Sc.nextDouble();
 
-		System.out.print("키를 입력하세요(m 기준)");
+		System.out.print("키를 입력하세요(m 기준) : ");
 
 		h = Sc.nextDouble();
 		result = w / (h * h);
