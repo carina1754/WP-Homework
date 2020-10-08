@@ -10,6 +10,7 @@ public class Anagram {
 		int i = 0,j=0,k=0;//반복문을 위한 변수 (i는 quit입력시 결과 출력, j는 anagram인 목록 출력, k는 anagram이 아닌 목록 출력)
 		while (true) {//quit입력 전까지 반복
 			String first = sc.next();//첫번째 문자열
+			first = first.toLowerCase();//소문자 변환
 			if (first.equals("quit")) {//quit입력시 while문 break 및 결과 출력
 				System.out.println("anagram!");
 				for(k=0;k<i;k++) {//anagram인 목록 출력
@@ -23,6 +24,7 @@ public class Anagram {
 				break;
 			}
 			String second = sc.next();//두번째 문자열
+			second = second.toLowerCase();//소문자 변환
 			int result = anagram(first, second);//anagram 분석
 			if (result == 0) {//anagram이면 array1에 삽입
 				array1[i] = first + " " + second;
