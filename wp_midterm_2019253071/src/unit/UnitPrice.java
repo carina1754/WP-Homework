@@ -1,4 +1,4 @@
-package wp_midterm_2019253071;
+package unit;
 
 public class UnitPrice {
 	public static final int SCV_M = 50;

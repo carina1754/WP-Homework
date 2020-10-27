@@ -1,4 +1,4 @@
-package wp_midterm_2019253071;
+package unit;
 
 public class UnitTime {
 public static final int SCV_T = 13;

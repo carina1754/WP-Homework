@@ -1,4 +1,4 @@
-package wp_midterm_2019253071;
+package building;
 
 public class BuildingPrice {
 	public static final int COMMANDCENTER_M = 400;

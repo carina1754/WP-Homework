@@ -1,4 +1,4 @@
-package wp_midterm_2019253071;
+package thread;
 
 import wp_midterm_2019253071.*;
 

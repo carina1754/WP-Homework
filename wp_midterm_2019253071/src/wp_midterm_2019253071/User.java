@@ -43,10 +43,19 @@ public class User {
 		System.out.println("최대 인구수: " + this.mpop);
 		System.out.println();
 	}
+	public void submpop(int subCount) {
+		this.mpop -= subCount;
+		System.out.println("최대 인구수: " + this.mpop);
+		System.out.println();
+	}
 	public void addppop(int addCount) {
 		this.ppop += addCount;
 	}
+	public void subppop(int subCount) {
+		this.ppop -= subCount;
+	}
 	public void addResource(int scvUnitCount, int threadCount) {
+		
 		this.mineral += (scvUnitCount-3) * 8;
 		this.gas += (3*8);
 		if(threadCount % 5 == 0) {

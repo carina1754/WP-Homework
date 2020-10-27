@@ -2,27 +2,32 @@ package wp_midterm_2019253071;
 import wp_midterm_2019253071.*;
 import java.util.Scanner;
 
+import building.BuildingBarrack;
+import building.BuildingCommandCenter;
+import building.BuildingPrice;
+import building.BuildingRefinery;
+import building.BuildingSupplyDepot;
+import building.BuildingTime;
+import thread.SourceThread;
+import unit.UnitFirebat;
+import unit.UnitMarine;
+import unit.UnitMedic;
+import unit.UnitPrice;
+import unit.UnitScv;
+import unit.UnitTime;
+
 public class Game {
 	public static final Scanner scan = new Scanner(System.in);
-	private static final String makingSuffixStr = "초 뒤에 생성됩니다...";
-
-	public static int MAXP = 200;
-	public int MINP = 10;
-	public static int mineral = 50;
-	public int gas = 0;
-	public static int bc=0;
-	public static int cc=1;
-	public static int sc=1;
-	public static int rc=0;
-	public static int scvma=7;
-	public static int scvga=7;
-	public static int scvu=0;
 
 	static User user = new User(50,0,7,10);
 	static UnitMarine marine = new UnitMarine();
 	static UnitScv scv = new UnitScv();
 	static UnitMedic medic = new UnitMedic();
 	static UnitFirebat firebat = new UnitFirebat();
+	static BuildingSupplyDepot supplydepot = new BuildingSupplyDepot();
+	static BuildingBarrack barrack = new BuildingBarrack();
+	static BuildingCommandCenter commandcenter = new BuildingCommandCenter();
+	static BuildingRefinery refinery = new BuildingRefinery();
 	
 	public static void showInit() throws InterruptedException {
 		System.out.println("┌--------------------------------------------------------------------------------┐");
@@ -49,6 +54,24 @@ public class Game {
 	public static int setBuildingMenu() {
 		System.out.println("건물을 선택해주세요 ......... ");
 		System.out.println("1. 커맨드센터, 2. 서플라이디팟, 3. 배럭, 4. 리파이너리, 5. 뒤로가기");
+		return scan.nextInt();
+	}
+	
+	public static int removeMenu() {
+		System.out.println("삭제할 것을 선택해주세요 ......... ");
+		System.out.println("1. 건물, 2. 유닛, 3. 뒤로가기");
+		return scan.nextInt();
+	}
+	
+	public static int removeUnitMenu() {
+		System.out.println("삭제할 유닛을 선택해주세요 ......... ");
+		System.out.println("1. SCV, 2. 마린, 3. 파이어뱃, 4. 메딕, 5. 뒤로가기");
+		return scan.nextInt();
+	}
+	
+	public static int removeBuildingMenu() {
+		System.out.println("삭제할 건물을 선택해주세요 ......... ");
+		System.out.println("1. 커맨드센터, 2. 서플라이 디팟, 3. 배럭, 4. 리파이너리, 5. 뒤로가기");
 		return scan.nextInt();
 	}
 	
@@ -81,30 +104,11 @@ public class Game {
 		System.out.println("1. 커맨드센터, 2. 배럭");
 		return scan.nextInt();
 	}
-	
-	public static void addSupplydepotPopulationCount() throws InterruptedException {
-		if(user.isapop()){
-			if(user.getMineral() < 100) {
-				System.out.println("미네랄이 부족합니다... ");
-				System.out.println("현재 미네랄: " + user.getMineral());
-				System.out.println();
-			}
-			System.out.println("서플라이 디팟이 " + BuildingTime.SUPPLYDEPOT_T + makingSuffixStr);
-			Thread.sleep(2000);
-			
-			System.out.println("최대 인구수가 10 증가 되었습니다.");
-			user.addmpop(10);
-		}
-		else {
-			System.out.println("인구수를 초과합니다. 설치할 수 있는 서플라이 디팟을 초과합니다.");
-		}
-	}
 
 	public static void main(String args[]) throws InterruptedException {
 	
 	showInit();
 	UnitScv.setUnitNum(7);
-	int menu = setMainMenu();
 	
 	SourceThread sourcethread = new SourceThread(user, scv.getUnitNum());
 	Thread scvThread = new Thread(sourcethread);
@@ -112,155 +116,255 @@ public class Game {
 	
 	while(true) {
 		
+		int menu = setMainMenu();
+		
 	if(menu == 1) {
 		
 		int buildmenu = setBuildingMenu();
 		
 		switch (buildmenu) {
 		case 1:
-			System.out.println("커맨드센터가 이미 건설되어 있습니다.");
-			break;
-		
+			if(commandcenter.isBuild()) { 
+				System.out.println("이미 커맨드센터가 건설되어 있습니다. SCV를 생성하세요.");
+				break;
+			}
+			else if (user.getMineral() < BuildingPrice.COMMANDCENTER_M) {
+				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
+				break;
+			}
+			else if(user.isapop()) {
+				user.setMineral(user.getMineral() - BuildingPrice.COMMANDCENTER_M);
+				commandcenter.build();
+				break;
+			}
+			else {
+				System.out.println("커맨드센터를 건설할 수 없습니다.");
+				break;
+			}
+			
 		case 2:
 			if (user.getMineral() < BuildingPrice.SUPPLYDEPOT_M) {
 				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
 				break;
 			}
-			else if(user.isapop()) {
-				System.out.println("서플라이 디팟을 생성합니다.");
-				addSupplydepotPopulationCount();
-				Thread.sleep(BuildingTime.SUPPLYDEPOT_T*1000);
+			else if(user.isapop()&&commandcenter.isBuild()) {
+				user.setMineral(user.getMineral() - BuildingPrice.SUPPLYDEPOT_M);
+				supplydepot.build();
+				user.addmpop(10);
 				break;
 			}
-			else
+			else if(supplydepot.isBuild()&&user.getmpop()>=200) {
+				System.out.println("인구수를 초과합니다. 설치할 수 있는 서플라이 디팟을 초과합니다.");
+				break;
+			}
+			else {
 				System.out.println("서플라이 디팟을 건설할 수 없습니다.");
-			break;
-		
+				break;
+			}
+
 		case 3:
-			if(bc==1) {
+			if(barrack.isBuild()) {
 				System.out.println("이미 배럭이 건설되어 있습니다. 유닛을 생성하세요.");
 				break;					
 			}
-			else if(bc==0) {
-				if(user.getMineral() < BuildingPrice.BARRACK_M) {
+			if(user.getMineral() < BuildingPrice.BARRACK_M) {
 				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
 				break;
-				}
-				else {
+			}
+			else if(!barrack.isBuild()&&commandcenter.isBuild()) {
 					user.setMineral(user.getMineral() - BuildingPrice.BARRACK_M);
-					System.out.println("배럭이 " + BuildingPrice.BARRACK_M + makingSuffixStr);
-					Thread.sleep(BuildingTime.BARRACK_T*1000);
-					bc++;
+					barrack.build();
 					break;
 				}
+			else {
+				System.out.println("서플라이 디팟을 건설할 수 없습니다.");
+				break;
 			}
+			
 		case 4:
-			if(mineral>=100&&rc==0) {
-				System.out.println("리파이너리를 상성합니다.");
+			if(barrack.isBuild()) {
+				System.out.println("이미 배럭이 건설되어 있습니다. 유닛을 생성하세요.");
+				break;					
+			}
+			else if (user.getMineral() < BuildingPrice.REFINERY_M) {
+				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
+				break;
+			}
+			else if(!refinery.isBuild() && commandcenter.isBuild()) {
 				user.setMineral(user.getMineral() - BuildingPrice.REFINERY_M);
-				Thread.sleep(BuildingTime.REFINERY_T*1000);
-				rc++;
+				refinery.build();
 				break;
 				}
-				if(rc == 1) {
-					System.out.println("더이상 지을 곳이 없습니다.");
-					break;
-					}
+			else {
+				System.out.println("리파이너리를 건설할 수 없습니다.");
+				break;
+			}
 		}
 	}
 	
-	else if(menu == 2)
+	else if(menu == 2) {
 		System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
+	}
 	
 	else if(menu == 3) {
 		int pmenu = produceUnitBuildMenu();
 		if(pmenu == 1) {
 			int cmenu = produceCommandCenterUnitMenu();
 			if(cmenu == 1) {
-				if(user.getMineral() < 50) {
+				if(user.getMineral() < UnitPrice.SCV_M) {
 					System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
-				
-				} else if(user.isepop(1)) {
-					addSupplydepotPopulationCount();
-				
-				} else {
+				} 
+				else if(!user.isepop(1)) {
+					System.out.println("인구수가 부족합니다. 서플라이 디팟을 건설하세요.");
+				} 
+				else {
 					user.setMineral(user.getMineral() - UnitPrice.SCV_M);
-					System.out.println("SCV가 " + UnitTime.SCV_T + makingSuffixStr);
-					Thread.sleep(UnitTime.SCV_T*1000);
-
-					//marine.printMarineInfo();	// 전략 패턴(???)
+					scv.getUnitNum();
 					user.addppop(1);
+					System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 				}
-				
 			}
 		}
 		
 		else if(pmenu == 2) {
-		if(bc==1) {
+		if(barrack.isBuild()) {
 		int bmenu = produceBarrackUnitMenu();
 		if(bmenu == 1) {
 			if(user.getMineral() < UnitPrice.MARINE_M) {
 				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
-			
-			} else if(user.isepop(1)) {
-				addSupplydepotPopulationCount();
-			
-			} else {
+			} 
+			else if(!user.isepop(1)) {
+				System.out.println("인구수가 부족합니다. 서플라이 디팟을 건설하세요.");
+			} 
+			else {
 				user.setMineral(user.getMineral() - UnitPrice.MARINE_M);
-				System.out.println("마린이 " + UnitTime.MARINE_T + makingSuffixStr);
-				Thread.sleep(UnitTime.MARINE_T*1000);
-
-				//marine.printMarineInfo();	// 전략 패턴(???)
+				marine.getUnitNum();
 				user.addppop(1);
+				System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 			}
-			
 		}
 		
 		else if(bmenu == 2) {
 			if(user.getMineral() < UnitPrice.FIREBAT_M && user.getGas() < UnitPrice.FIREBAT_G) {
 				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
-			
-			} else if(user.isepop(1)) {
-				addSupplydepotPopulationCount();
-			
-			} else {
+			} 
+			else if(!user.isepop(1)) {
+				System.out.println("인구수가 부족합니다. 서플라이 디팟을 건설하세요.");
+			} 
+			else {
 				user.setMineral(user.getMineral() - UnitPrice.FIREBAT_M);
 				user.setGas(user.getGas() - UnitPrice.FIREBAT_G);
-				System.out.println("파이어뱃이 " + UnitTime.FIREBAT_T + makingSuffixStr);
-				Thread.sleep(UnitTime.FIREBAT_T*1000);
-
-				//marine.printMarineInfo();	// 전략 패턴(???)
+				firebat.getUnitNum();
 				user.addppop(1);
+				System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 			}
 		}
+
 		else if(bmenu == 3) {
 			if(user.getMineral() < UnitPrice.MEDIC_M && user.getGas() < UnitPrice.MEDIC_G) {
 				System.out.println("SCV가 열심히 돈을 벌고있으니 기다려주세요...");
-			
-			} else if(user.isepop(1)) {
-				addSupplydepotPopulationCount();
-			} else {
+			} 
+			else if(!user.isepop(1)) {
+				System.out.println("인구수가 부족합니다. 서플라이 디팟을 건설하세요.");
+			} 
+			else {
 				user.setMineral(user.getMineral() - UnitPrice.MEDIC_M);
 				user.setGas(user.getGas() - UnitPrice.MEDIC_G);
-				System.out.println("메딕이 " + UnitTime.MEDIC_T + makingSuffixStr);
-				Thread.sleep(UnitTime.MEDIC_T*1000);
-
-				//marine.printMarineInfo();	// 전략 패턴(???)
+				medic.getUnitNum();
 				user.addppop(1);
+				System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 				}
 			}
 		}
 		
-		else if(bc==0)
+		else
 			System.out.println("배럭이 존재하지 않습니다. SCV로 건설하세요.");
 		}
 	}
 	
 	else if(menu == 4) {
-		System.out.println("삭제할 유닛을 골라주세요.");
-		System.out.println("1. 마린, 2. 메딕, 3. 파이어벳");
-		System.out.println("삭제할 유닛의 수를 입력해 주세요");
-		
+		int rmenu = removeMenu();
+		switch(rmenu) {
+		case 1:
+			int rbmenu = removeBuildingMenu();
+			switch(rbmenu) {
+			case 1:
+				if(!commandcenter.isBuild()) {
+					System.out.println("커맨드센터가 없습니다.");
+					break;
+				}
+				else if(commandcenter.isBuild()){	
+					commandcenter.destory(1);
+					System.out.println("삭제가 완료되었습니다.");
+					break;
+				}
+				else {
+					System.out.println("다시 입력해 주세요.");
+					break;
+				}
+				
+			case 2:
+				if(!supplydepot.isBuild()) {
+					System.out.println("서플라이 디팟이 없습니다.");
+					break;
+				}
+				else if(supplydepot.isBuild()) {
+					int min = (int) Math.ceil(user.getppop()/10);
+					System.out.println("서플라이 디팟을 얼마나 삭제할 것인가요? 최소로 가질 수 있는 개수 : " + min);
+					while(true) {
+						System.out.println("개수입력 : ");
+						int des = scan.nextInt();
+						if(des<min) {
+							supplydepot.destory(des);
+							des = 10*des;
+							user.submpop(des);
+							System.out.println("삭제가 완료되었습니다.");
+							break;
+						}
+					}
+				}
+					else {
+						System.out.println("다시 입력해 주세요.");
+						break;
+					}
+
+			case 3:
+				if(!barrack.isBuild()) {
+					System.out.println("배럭이 없습니다.");
+					break;
+				}
+				else if(barrack.isBuild()) {
+				barrack.destory(1);
+				System.out.println("삭제가 완료되었습니다.");
+				break;
+				}
+				else {
+					System.out.println("다시 입력해 주세요.");
+					break;
+				}
+			}
+			
+		case 2:
+			int rumenu = removeUnitMenu();
+			switch(rumenu) {
+			case 1:
+				scv.killUnit();
+				user.subppop(1);
+				System.out.println("삭제가 완료되었습니다.");
+			case 2:
+				marine.killUnit();
+				user.subppop(1);
+				System.out.println("삭제가 완료되었습니다.");
+			case 3:
+				firebat.killUnit();
+				user.subppop(1);
+				System.out.println("삭제가 완료되었습니다.");
+			case 4:
+				medic.killUnit();
+				user.subppop(1);
+				System.out.println("삭제가 완료되었습니다.");
+			}
+		}
 	}
 	
 	else if(menu == 5) {
@@ -271,6 +375,7 @@ public class Game {
 	else
 		System.out.println("다시 입력해 주세요.");
 	}
+	System.exit(0);
 }
 }
 
