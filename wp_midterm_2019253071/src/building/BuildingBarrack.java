@@ -14,18 +14,18 @@ public class BuildingBarrack extends Building{
 	}
 
 	@Override
-	public void build() throws InterruptedException {
+	public int build() throws InterruptedException {
 		// TODO Auto-generated method stub
 		System.out.println("배럭을 생성합니다.");
-		Thread.sleep(BuildingTime.BARRACK_T*1000);
 		System.out.println("배럭이 " + BuildingPrice.BARRACK_M + "초 뒤에 생성됩니다...");
-		BarrackNum++;
+		Thread.sleep(BuildingTime.BARRACK_T*1000);
+		return BarrackNum++;
 	}
 
 	@Override
 	public int destory(int a) {
 		// TODO Auto-generated method stub
-		BarrackNum =-a;
+		BarrackNum -= a;
 		if(BarrackNum <= 0) {
 			System.out.println("배럭의 개수가 0이하 입니다. ");
 			return 0;

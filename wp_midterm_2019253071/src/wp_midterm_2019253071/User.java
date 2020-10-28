@@ -74,33 +74,16 @@ public class User {
 			System.out.println("현재 미네랄은: " + this.getMineral() + "원 이고, 현재 가스는: " + this.getGas() + "원 입니다.");
 		}
 	}
-	/**
-	 * 현재 인구수 + 뽑으려는 유닛의 인구수가 최대 인구수보다 작을때(같을때도 유닛을 뽑을 순  있음)
-	 * ex) 현재 인구수: 16, 마린 인구수: 1, 최대 인구수: 20 ---> 16+1 < 20 (false)
-	 * 따라서 위 경우는 뽑을 수 있음.
-	 * @return
-	 */
 	public boolean isepop(int unitCount) {
-		if(this.mpop < 200) 
-			return this.getppop() + unitCount > this.getppop();
+		if(this.getmpop() <= 200 && this.getppop() + unitCount <= this.getmpop()) 
+			return true;
 		else 
 			return false;
 	}
 	public boolean isapop() {
-		if(this.mpop < 200) 
+		if(this.mpop <= 200) 
 			return true;
 			else
 				return false;
 	}
-	/**
-	 * 현재 테란의 미네랄, 가스, 인구수 출력
-	 */
-	public void showNowTerranInfo() {
-		System.out.println("--------------------------------------------------------------------------------");
-		System.out.println("현재 미네랄 \t 현재 가스 \t 현재 인구수");
-		System.out.println(this.getMineral() + "\t" + this.getGas() + "\t" 
-					+ this.getppop() + "/" + this.getmpop());
-		System.out.println("--------------------------------------------------------------------------------");
-	}
-
 }

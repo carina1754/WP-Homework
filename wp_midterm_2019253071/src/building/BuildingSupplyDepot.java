@@ -23,7 +23,7 @@ public class BuildingSupplyDepot extends Building{
 	@Override
 	public int destory(int a) {
 		// TODO Auto-generated method stub
-		SupplyDepotNum =-a;
+		SupplyDepotNum -= a;
 		if(SupplyDepotNum <= 0) {
 			System.out.println("서플라이 디팟의 개수가 0이하 입니다. ");
 			return 0;

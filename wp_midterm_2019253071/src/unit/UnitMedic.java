@@ -1,5 +1,12 @@
 package unit;
-import wp_midterm_2019253071.*;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 public class UnitMedic extends Unit{
 
 	private int medicNum=0;
@@ -10,17 +17,29 @@ public class UnitMedic extends Unit{
 	public int getGas() {	
 		return UnitPrice.MEDIC_G;
 	}
-	public int getPopulationNum() {	
-		return 2;
+	public int getUnitNum(){
+		return medicNum;
 	}
 	public int addUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
-		System.out.println("메딕이 " + UnitTime.MEDIC_T +"초 뒤에 생성됩니다...");
+		System.out.println("메딕이 " + UnitTime.MEDIC_T +"초 뒤에 생성됩니다.");
 		Thread.sleep(UnitTime.MEDIC_T*1000);
 		medicNum++;
 		return medicNum;
 	}
-	public void getSound() {
-		System.out.println("나는 메딕 !!!!!!!!!!!!!");
+	public void getSound() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		 AudioInputStream medicsoundpack = AudioSystem.getAudioInputStream(UnitFirebat.class.getResourceAsStream("/music/TMdWht00.wav"));
+		 Clip medicsound = AudioSystem.getClip();
+           medicsound.stop();
+           medicsound.open(medicsoundpack);
+           medicsound.start();
+		System.out.println("메딕이 생성되었습니다.");
+	}
+	public void getdSound() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		 AudioInputStream medicsoundpack = AudioSystem.getAudioInputStream(UnitFirebat.class.getResourceAsStream("/music/TMdDth00.wav"));
+		 Clip medicsound = AudioSystem.getClip();
+          medicsound.stop();
+          medicsound.open(medicsoundpack);
+          medicsound.start();
 	}
 	public int getMakeTime() {	
 		return UnitTime.MEDIC_T;
@@ -43,8 +62,8 @@ public class UnitMedic extends Unit{
 		System.out.println("시야 : 9");
 	}
 	@Override
-	public void printUnitPopulation() {
+	public void printUnitPopulation(int ppop, int mpop) {
 		// TODO Auto-generated method stub
-		System.out.println("현재 메딕 수는: " + medicNum + "마리 입니다.");
+		System.out.println("현재 인구수는 : " + ppop + "/" + mpop+ " 입니다.");
 	}
 }

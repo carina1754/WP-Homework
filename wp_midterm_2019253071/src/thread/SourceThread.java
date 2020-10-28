@@ -26,11 +26,10 @@ public class SourceThread implements Runnable{
 		while(true) {
 			try {
 				if(scvUnitCount == 0) {
-					System.out.println("SCV가 없습니다... Thread를 종료합니다");
-					break;
+					System.out.println("SCV가 없습니다.                                    SCV를 생산해 주세요.");
 				}
 				
-				Thread.sleep(5000);
+				Thread.sleep(1000);
 				user.addResource(scvUnitCount, threadCount);
 				threadCount ++;
 			} catch (InterruptedException e) {
