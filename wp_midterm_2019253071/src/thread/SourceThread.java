@@ -7,7 +7,15 @@ public class SourceThread implements Runnable{
 	int scvUnitCount;
 	User user;
 	int threadCount = 0;	// SCV가 5번 자원을 벌때마다 자원 출력
-	
+	public int getcount() {
+		return threadCount;
+	}
+	public void addUnitcount() {
+		scvUnitCount++;
+	}
+	public void subUnitcount() {
+		scvUnitCount--;
+	}
 	public SourceThread(User user, int scvUnitCount) {
 		this.user = user;
 		this.scvUnitCount = scvUnitCount;

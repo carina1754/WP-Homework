@@ -13,7 +13,7 @@ public class UnitMedic extends Unit{
 	public int getPopulationNum() {	
 		return 2;
 	}
-	public int getUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
+	public int addUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
 		System.out.println("메딕이 " + UnitTime.MEDIC_T +"초 뒤에 생성됩니다...");
 		Thread.sleep(UnitTime.MEDIC_T*1000);
 		medicNum++;

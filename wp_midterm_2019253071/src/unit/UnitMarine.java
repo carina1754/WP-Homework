@@ -8,7 +8,7 @@ public class UnitMarine extends Unit{
 	public int getMineral() {	
 		return UnitPrice.MARINE_M;
 	}
-	public int getUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
+	public int addUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
 		System.out.println("마린이 " + UnitTime.MARINE_T + "초 뒤에 생성됩니다...");
 		Thread.sleep(UnitTime.MARINE_T*1000);
 		this.marineNum ++;

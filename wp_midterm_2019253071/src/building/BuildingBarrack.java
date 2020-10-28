@@ -14,12 +14,12 @@ public class BuildingBarrack extends Building{
 	}
 
 	@Override
-	public int build() throws InterruptedException {
+	public void build() throws InterruptedException {
 		// TODO Auto-generated method stub
 		System.out.println("배럭을 생성합니다.");
 		Thread.sleep(BuildingTime.BARRACK_T*1000);
 		System.out.println("배럭이 " + BuildingPrice.BARRACK_M + "초 뒤에 생성됩니다...");
-		return BarrackNum++;
+		BarrackNum++;
 	}
 
 	@Override

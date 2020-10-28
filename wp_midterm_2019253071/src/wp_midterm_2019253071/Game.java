@@ -20,10 +20,12 @@ public class Game {
 	public static final Scanner scan = new Scanner(System.in);
 
 	static User user = new User(50,0,7,10);
+	
 	static UnitMarine marine = new UnitMarine();
 	static UnitScv scv = new UnitScv();
 	static UnitMedic medic = new UnitMedic();
 	static UnitFirebat firebat = new UnitFirebat();
+	
 	static BuildingSupplyDepot supplydepot = new BuildingSupplyDepot();
 	static BuildingBarrack barrack = new BuildingBarrack();
 	static BuildingCommandCenter commandcenter = new BuildingCommandCenter();
@@ -105,6 +107,7 @@ public class Game {
 		return scan.nextInt();
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void main(String args[]) throws InterruptedException {
 	
 	showInit();
@@ -113,7 +116,6 @@ public class Game {
 	SourceThread sourcethread = new SourceThread(user, scv.getUnitNum());
 	Thread scvThread = new Thread(sourcethread);
 	scvThread.start();
-	
 	while(true) {
 		
 		int menu = setMainMenu();
@@ -158,7 +160,7 @@ public class Game {
 				break;
 			}
 			else {
-				System.out.println("서플라이 디팟을 건설할 수 없습니다.");
+				System.out.println("서플라이 디팟을 건설할 수 없습니다. 커맨드센터를 건설해 주세요.");
 				break;
 			}
 
@@ -177,13 +179,13 @@ public class Game {
 					break;
 				}
 			else {
-				System.out.println("서플라이 디팟을 건설할 수 없습니다.");
+				System.out.println("배럭을 건설할 수 없습니다. 커맨드센터를 건설해 주세요.");
 				break;
 			}
 			
 		case 4:
-			if(barrack.isBuild()) {
-				System.out.println("이미 배럭이 건설되어 있습니다. 유닛을 생성하세요.");
+			if(refinery.isBuild()) {
+				System.out.println("이미 리파이너리가 건설되어 있습니다. 유닛을 생성하세요.");
 				break;					
 			}
 			else if (user.getMineral() < BuildingPrice.REFINERY_M) {
@@ -193,10 +195,11 @@ public class Game {
 			else if(!refinery.isBuild() && commandcenter.isBuild()) {
 				user.setMineral(user.getMineral() - BuildingPrice.REFINERY_M);
 				refinery.build();
+				user.gasOn();
 				break;
 				}
 			else {
-				System.out.println("리파이너리를 건설할 수 없습니다.");
+				System.out.println("리파이너리를 건설할 수 없습니다. 커맨드센터를 건설해 주세요.");
 				break;
 			}
 		}
@@ -219,10 +222,11 @@ public class Game {
 				} 
 				else {
 					user.setMineral(user.getMineral() - UnitPrice.SCV_M);
-					scv.getUnitNum();
+					scv.addUnitNum();
 					user.addppop(1);
+					sourcethread.addUnitcount();
 					System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
-				}
+				} 
 			}
 		}
 		
@@ -238,7 +242,7 @@ public class Game {
 			} 
 			else {
 				user.setMineral(user.getMineral() - UnitPrice.MARINE_M);
-				marine.getUnitNum();
+				marine.addUnitNum();
 				user.addppop(1);
 				System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 			}
@@ -254,7 +258,7 @@ public class Game {
 			else {
 				user.setMineral(user.getMineral() - UnitPrice.FIREBAT_M);
 				user.setGas(user.getGas() - UnitPrice.FIREBAT_G);
-				firebat.getUnitNum();
+				firebat.addUnitNum();
 				user.addppop(1);
 				System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 			}
@@ -270,7 +274,7 @@ public class Game {
 			else {
 				user.setMineral(user.getMineral() - UnitPrice.MEDIC_M);
 				user.setGas(user.getGas() - UnitPrice.MEDIC_G);
-				medic.getUnitNum();
+				medic.addUnitNum();
 				user.addppop(1);
 				System.out.println("현재 인구수는 : " + user.getppop() + "/" + user.getmpop() + " 입니다.");
 				}
@@ -343,26 +347,45 @@ public class Game {
 					break;
 				}
 			}
-			
+			case 4:
+			if(!refinery.isBuild()) {
+				System.out.println("리파이너리가 없습니다.");
+				break;
+			}
+			else if(refinery.isBuild()){	
+				refinery.destory(1);
+				System.out.println("삭제가 완료되었습니다.");
+				user.gasOff();
+				break;
+			}
+			else {
+				System.out.println("다시 입력해 주세요.");
+				break;
+			}
 		case 2:
 			int rumenu = removeUnitMenu();
 			switch(rumenu) {
 			case 1:
 				scv.killUnit();
 				user.subppop(1);
+				sourcethread.subUnitcount();
 				System.out.println("삭제가 완료되었습니다.");
+				break;
 			case 2:
 				marine.killUnit();
 				user.subppop(1);
 				System.out.println("삭제가 완료되었습니다.");
+				break;
 			case 3:
 				firebat.killUnit();
 				user.subppop(1);
 				System.out.println("삭제가 완료되었습니다.");
+				break;
 			case 4:
 				medic.killUnit();
 				user.subppop(1);
 				System.out.println("삭제가 완료되었습니다.");
+				break;
 			}
 		}
 	}

@@ -2,16 +2,22 @@ package wp_midterm_2019253071;
 
 public class User {
 
-	private int mineral;	// 미네랄
-	private int gas;		// 가스
+	private int mineral=0;	// 미네랄
+	private int gas=0;		// 가스
 	private int ppop;	// 현재 인구수
 	private int mpop;	// 최대 인구수
-
+	private boolean flag = false;
 	public User(int mineral, int gas, int ppop, int mpop) {
 		this.mineral = mineral;
 		this.gas = gas;
 		this.ppop = ppop;
 		this.mpop = mpop;
+	}
+	public void gasOn() {
+		flag = true;
+	}
+	public void gasOff() {
+		flag = false;
 	}
 	public int getMineral() {
 		return mineral;
@@ -55,15 +61,19 @@ public class User {
 		this.ppop -= subCount;
 	}
 	public void addResource(int scvUnitCount, int threadCount) {
-		
+		if(flag) {
 		this.mineral += (scvUnitCount-3) * 8;
 		this.gas += (3*8);
+		}
+		else {
+			this.mineral += scvUnitCount * 8;
+
+		}
 		if(threadCount % 5 == 0) {
 			System.out.println("=============== SCV Thread ===============");
 			System.out.println("현재 미네랄은: " + this.getMineral() + "원 이고, 현재 가스는: " + this.getGas() + "원 입니다.");
 		}
 	}
-	
 	/**
 	 * 현재 인구수 + 뽑으려는 유닛의 인구수가 최대 인구수보다 작을때(같을때도 유닛을 뽑을 순  있음)
 	 * ex) 현재 인구수: 16, 마린 인구수: 1, 최대 인구수: 20 ---> 16+1 < 20 (false)

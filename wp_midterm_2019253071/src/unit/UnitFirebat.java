@@ -12,7 +12,7 @@ public class UnitFirebat extends Unit{
 	public int getGas() {	
 		return UnitPrice.FIREBAT_G;
 	}
-	public int getUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
+	public int addUnitNum() throws InterruptedException {	// 마린생성시 호출, 마린수 +1
 		System.out.println("파이어뱃이 " + UnitTime.FIREBAT_T +"초 뒤에 생성됩니다...");
 		Thread.sleep(UnitTime.FIREBAT_T*1000);
 		this.firebatNum ++;

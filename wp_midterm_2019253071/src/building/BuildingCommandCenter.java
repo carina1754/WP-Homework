@@ -15,7 +15,7 @@ public class BuildingCommandCenter extends Building{
 	public int build() throws InterruptedException {
 		// TODO Auto-generated method stub
 		System.out.println("커맨드센터를 생성합니다.");
-		Thread.sleep(BuildingTime.COMMANDCENTER_T*1000);
+		Thread.sleep(BuildingTime.COMMANDCENTER_T*1);
 		System.out.println("커맨드센터가 " + BuildingPrice.COMMANDCENTER_M + "초 뒤에 생성됩니다...");
 		return CommandCenterNum++;
 	}
